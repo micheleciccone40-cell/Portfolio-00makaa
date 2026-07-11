@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BRACE — Cucina di Fuoco · Napoli</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:wght@400;500&family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0c120d;
+    --panel: #121a14;
+    --cream: #efe9da;
+    --muted: #8f9284;
+    --line: rgba(239, 233, 218, 0.13);
+    --brass: #d3a13b;
+    --ember: #b4622d;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--cream);
+    font-family: 'Archivo', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  ::selection { background: var(--brass); color: var(--bg); }
+
+  .mono {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .serif { font-family: 'Fraunces', serif; }
+
+  /* grain */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    pointer-events: none;
+    opacity: 0.06;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ─── Nav ─── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 48px;
+    height: 68px;
+    border-bottom: 1px solid var(--line);
+    background: rgba(12, 18, 13, 0.82);
+    backdrop-filter: blur(12px);
+  }
+
+  .nav-logo {
+    font-family: 'Fraunces', serif;
+    font-weight: 900;
+    font-size: 22px;
+    letter-spacing: 0.04em;
+    color: var(--cream);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--brass); }
+
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a { color: var(--muted); text-decoration: none; transition: color .3s; }
+  .nav-links a:hover { color: var(--cream); }
+
+  .btn-prenota {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--bg);
+    background: var(--brass);
+    padding: 12px 24px;
+    text-decoration: none;
+    transition: background .3s;
+  }
+  .btn-prenota:hover { background: var(--cream); }
+
+  /* ─── Hero ─── */
+  #hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 100px 48px 60px;
+    overflow: hidden;
+  }
+
+  .ember-glow {
+    position: absolute;
+    left: 50%;
+    bottom: -34vh;
+    transform: translateX(-50%);
+    width: 72vw;
+    height: 72vh;
+    border-radius: 50%;
+    background:
+      radial-gradient(closest-side, rgba(211, 161, 59, 0.32), rgba(180, 98, 45, 0.16) 45%, transparent 72%);
+    filter: blur(28px);
+    animation: flicker 5s ease-in-out infinite;
+  }
+
+  .ember-core {
+    position: absolute;
+    left: 50%;
+    bottom: -10vh;
+    transform: translateX(-50%);
+    width: 26vw;
+    height: 20vh;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(228, 138, 62, 0.5), transparent 75%);
+    filter: blur(20px);
+    animation: flicker 3.4s ease-in-out infinite reverse;
+  }
+
+  @keyframes flicker {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.75; }
+  }
+
+  .hero-kicker { color: var(--brass); margin-bottom: 28px; }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 900;
+    font-size: clamp(80px, 17vw, 260px);
+    line-height: 0.85;
+    letter-spacing: 0.01em;
+    color: var(--cream);
+    position: relative;
+  }
+
+  .hero-sub {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(18px, 2.2vw, 30px);
+    color: var(--muted);
+    margin-top: 30px;
+    max-width: 560px;
+  }
+  .hero-sub em { color: var(--brass); font-style: italic; }
+
+  .hero-cta { margin-top: 44px; display: flex; gap: 14px; }
+
+  .btn-ghost {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--cream);
+    border: 1px solid var(--line);
+    padding: 14px 28px;
+    text-decoration: none;
+    transition: border-color .3s, color .3s;
+  }
+  .btn-ghost:hover { border-color: var(--brass); color: var(--brass); }
+
+  .hero-meta {
+    position: absolute;
+    bottom: 28px;
+    left: 48px;
+    right: 48px;
+    display: flex;
+    justify-content: space-between;
+    color: var(--muted);
+  }
+
+  /* ─── Section base ─── */
+  section { padding: 110px 48px; border-top: 1px solid var(--line); }
+
+  .sec-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 32px;
+    margin: 0 auto 64px;
+    max-width: 1240px;
+  }
+
+  .sec-head h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 900;
+    font-size: clamp(40px, 6vw, 84px);
+    line-height: 0.95;
+  }
+
+  .sec-head .mono { color: var(--brass); display: block; margin-bottom: 14px; }
+  .sec-head p { color: var(--muted); max-width: 380px; font-size: 15px; line-height: 1.7; text-align: right; }
+
+  /* ─── Menu ─── */
+  .menu-list { max-width: 1240px; margin: 0 auto; border-top: 1px solid var(--line); }
+
+  .dish {
+    display: grid;
+    grid-template-columns: 64px 1fr auto;
+    align-items: baseline;
+    gap: 28px;
+    padding: 30px 18px;
+    border-bottom: 1px solid var(--line);
+    transition: background .3s, padding-left .3s;
+    cursor: pointer;
+  }
+
+  .dish .n { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--muted); }
+
+  .dish h3 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 30px;
+    letter-spacing: 0.01em;
+  }
+
+  .dish small { display: block; color: var(--muted); font-size: 14px; margin-top: 7px; line-height: 1.6; }
+
+  .dish .price { font-family: 'IBM Plex Mono', monospace; font-size: 15px; color: var(--cream); }
+
+  .dish:hover, .dish.active { background: var(--panel); padding-left: 34px; }
+  .dish:hover .n, .dish.active .n { color: var(--brass); }
+  .dish:hover h3, .dish.active h3 { color: var(--brass); font-style: italic; }
+
+  /* ─── Prenota ─── */
+  #prenota { background: var(--panel); }
+
+  .booking {
+    max-width: 1240px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border: 1px solid var(--line);
+    background: var(--bg);
+  }
+
+  .booking-left { padding: 56px; border-right: 1px solid var(--line); }
+
+  .booking-left h3 { font-family: 'Fraunces', serif; font-weight: 900; font-size: 44px; margin: 16px 0 10px; }
+  .booking-left > p { color: var(--muted); font-size: 15px; line-height: 1.7; max-width: 360px; }
+
+  .week {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    margin-top: 40px;
+  }
+
+  .day {
+    border: 1px solid var(--line);
+    padding: 16px 0 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color .3s, background .3s;
+  }
+
+  .day .dow { display: block; font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: .15em; color: var(--muted); margin-bottom: 8px; }
+  .day .num { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 600; }
+  .day.off { opacity: 0.3; cursor: default; }
+  .day.sel { border-color: var(--brass); background: rgba(211, 161, 59, 0.1); }
+  .day.sel .num { color: var(--brass); }
+
+  .booking-right { padding: 56px; display: flex; flex-direction: column; }
+
+  .slots-label { color: var(--muted); margin-bottom: 24px; }
+  .slots-label b { color: var(--brass); font-weight: 500; }
+
+  .slots { display: flex; flex-wrap: wrap; gap: 10px; }
+
+  .slot {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    padding: 12px 20px;
+    border: 1px solid var(--line);
+    color: var(--cream);
+    cursor: pointer;
+    transition: all .3s;
+  }
+  .slot.full { opacity: 0.3; text-decoration: line-through; cursor: default; }
+  .slot.sel { background: var(--brass); color: var(--bg); border-color: var(--brass); }
+
+  .booking-confirm {
+    margin-top: auto;
+    padding-top: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .booking-note { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .15em; color: var(--muted); text-transform: uppercase; line-height: 1.9; }
+  .booking-note b { color: var(--cream); font-weight: 500; }
+
+  /* ─── Eventi ─── */
+  .eventi-grid {
+    max-width: 1240px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    border: 1px solid var(--line);
+  }
+
+  .eventi-art {
+    position: relative;
+    min-height: 440px;
+    background:
+      radial-gradient(ellipse at 30% 80%, rgba(211,161,59,.4), transparent 55%),
+      radial-gradient(ellipse at 75% 30%, rgba(180,98,45,.3), transparent 60%),
+      linear-gradient(160deg, #182219, #0a0f0b 70%);
+    border-right: 1px solid var(--line);
+    overflow: hidden;
+  }
+
+  .eventi-art::before {
+    content: 'B';
+    position: absolute;
+    right: -40px;
+    bottom: -90px;
+    font-family: 'Fraunces', serif;
+    font-weight: 900;
+    font-style: italic;
+    font-size: 480px;
+    line-height: 1;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(239, 233, 218, 0.22);
+  }
+
+  .eventi-art .tag {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    color: var(--brass);
+  }
+
+  .eventi-txt { padding: 64px 56px; display: flex; flex-direction: column; justify-content: center; }
+  .eventi-txt h3 { font-family: 'Fraunces', serif; font-weight: 900; font-size: 42px; margin: 14px 0 18px; }
+  .eventi-txt p { color: var(--muted); font-size: 15px; line-height: 1.8; max-width: 420px; margin-bottom: 34px; }
+
+  /* ─── Footer ─── */
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 26px 48px;
+    display: flex;
+    justify-content: space-between;
+    color: var(--muted);
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#">BRACE<span>.</span></a>
+  <ul class="nav-links mono">
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#prenota">Prenota</a></li>
+    <li><a href="#eventi">Eventi</a></li>
+  </ul>
+  <a class="btn-prenota" href="#prenota">Prenota un tavolo</a>
+</nav>
+
+<section id="hero" style="border-top:none">
+  <div class="ember-glow"></div>
+  <div class="ember-core"></div>
+  <span class="mono hero-kicker">Cucina di fuoco — Napoli, dal 2026</span>
+  <h1>BRACE</h1>
+  <p class="hero-sub">Ogni piatto nasce dal carbone. Stagionale, essenziale, <em>bruciato al punto giusto.</em></p>
+  <div class="hero-cta">
+    <a class="btn-prenota" href="#prenota">Prenota un tavolo</a>
+    <a class="btn-ghost" href="#menu">Il menu</a>
+  </div>
+  <div class="hero-meta mono">
+    <span>VIA DEI TRIBUNALI 48</span>
+    <span>MAR — DOM · 19:00 / 00:00</span>
+    <span>+39 081 000 0000</span>
+  </div>
+</section>
+
+<section id="menu">
+  <div class="sec-head">
+    <div>
+      <span class="mono">(01) — Degustazione</span>
+      <h2>Il menu vive<br>di stagione.</h2>
+    </div>
+    <p>Sette portate che cambiano ogni settimana, decise dal mercato del mattino e dal carbone della sera. Nessun freezer, nessuna scorciatoia.</p>
+  </div>
+  <div class="menu-list">
+    <div class="dish" data-i="1">
+      <span class="n">01</span>
+      <div><h3>Scottona al carbone di quercia</h3><small>Frollatura 40 giorni, cipolla bruciata, jus al rosmarino</small></div>
+      <span class="price">34 €</span>
+    </div>
+    <div class="dish" data-i="2">
+      <span class="n">02</span>
+      <div><h3>Polpo su cenere di porro</h3><small>Cotto lentamente sulla brace morente, patata affumicata</small></div>
+      <span class="price">26 €</span>
+    </div>
+    <div class="dish" data-i="3">
+      <span class="n">03</span>
+      <div><h3>Pane di grani antichi &amp; burro nero</h3><small>Lievito madre di casa, burro montato al miso bruciato</small></div>
+      <span class="price">9 €</span>
+    </div>
+    <div class="dish" data-i="4">
+      <span class="n">04</span>
+      <div><h3>Gelato al fieno arso</h3><small>Latte di bufala, crumble di segale, olio verde</small></div>
+      <span class="price">12 €</span>
+    </div>
+  </div>
+</section>
+
+<section id="prenota">
+  <div class="sec-head">
+    <div>
+      <span class="mono">(02) — Prenotazione</span>
+      <h2>Il tavolo giusto,<br>senza telefonate.</h2>
+    </div>
+    <p>Ventidue coperti, un solo servizio per sera. La disponibilità è reale e si aggiorna in tempo reale.</p>
+  </div>
+  <div class="booking">
+    <div class="booking-left">
+      <span class="mono" style="color:var(--brass)">Luglio 2026 — Settimana 29</span>
+      <h3>Scegli la sera.</h3>
+      <p>Il sabato va via in fretta. Per gruppi oltre le sei persone scrivici direttamente.</p>
+      <div class="week">
+        <div class="day off"><span class="dow">LUN</span><span class="num">13</span></div>
+        <div class="day"><span class="dow">MAR</span><span class="num">14</span></div>
+        <div class="day"><span class="dow">MER</span><span class="num">15</span></div>
+        <div class="day sel" id="day-sel"><span class="dow">GIO</span><span class="num">16</span></div>
+        <div class="day"><span class="dow">VEN</span><span class="num">17</span></div>
+        <div class="day"><span class="dow">SAB</span><span class="num">18</span></div>
+        <div class="day off"><span class="dow">DOM</span><span class="num">19</span></div>
+      </div>
+    </div>
+    <div class="booking-right">
+      <p class="slots-label mono">Giovedì 16 luglio — <b>4 slot disponibili</b></p>
+      <div class="slots">
+        <span class="slot full">19:00</span>
+        <span class="slot">19:30</span>
+        <span class="slot sel" id="slot-sel">20:30</span>
+        <span class="slot">21:00</span>
+        <span class="slot full">21:30</span>
+        <span class="slot">22:00</span>
+      </div>
+      <div class="booking-confirm">
+        <p class="booking-note">Tavolo per 2<br><b>GIO 16 · 20:30 — Sala carbone</b></p>
+        <a class="btn-prenota" href="#">Conferma</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="eventi">
+  <div class="sec-head">
+    <div>
+      <span class="mono">(03) — Private dining</span>
+      <h2>La sala carbone.</h2>
+    </div>
+    <p>Una sala privata di dodici posti attorno al camino centrale, per cene su misura.</p>
+  </div>
+  <div class="eventi-grid">
+    <div class="eventi-art"><span class="mono tag">SALA CARBONE — 12 POSTI</span></div>
+    <div class="eventi-txt">
+      <span class="mono" style="color:var(--brass)">Eventi &amp; degustazioni</span>
+      <h3>Il fuoco, tutto per voi.</h3>
+      <p>Menu concordato con la cucina, abbinamento dalla cantina naturale e il camino centrale acceso solo per il vostro tavolo. Da ottobre a marzo.</p>
+      <a class="btn-ghost" href="#" style="width:max-content">Richiedi disponibilità</a>
+    </div>
+  </div>
+</section>
+
+<footer class="mono">
+  <span>© 2026 BRACE — CUCINA DI FUOCO</span>
+  <span>CONCEPT · DESIGN MICHELE CICCONE</span>
+  <span>P.IVA 00000000000</span>
+</footer>
+
+</body>
+</html>

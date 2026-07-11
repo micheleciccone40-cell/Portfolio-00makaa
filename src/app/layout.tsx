@@ -1,21 +1,23 @@
 import type { Metadata } from "next";
-import { Outfit, Syncopate } from "next/font/google";
+import { Archivo, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 
-const outfit = Outfit({
-  variable: "--font-outfit",
+const archivo = Archivo({
   subsets: ["latin"],
+  axes: ["wdth"],
+  variable: "--font-archivo",
 });
 
-const syncopate = Syncopate({
-  variable: "--font-syncopate",
-  weight: ["400", "700"],
+const plexMono = IBM_Plex_Mono({
   subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-plex-mono",
 });
 
 export const metadata: Metadata = {
-  title: "00makaa | Portfolio",
-  description: "Video Editor, Web Developer & 3D Artist. Ecosistemi digitali su misura tra codice, video e spazio 3D.",
+  title: "Michele Ciccone — Video Editor & Web Developer",
+  description:
+    "Studio indipendente di Michele Ciccone (00makaa). Video editing e storytelling per YouTube, sviluppo web con Next.js e GSAP, 3D in produzione.",
 };
 
 export default function RootLayout({
@@ -26,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="it" className="scroll-smooth">
       <body
-        className={`${outfit.variable} ${syncopate.variable} antialiased bg-[#0B071E] text-white font-sans overflow-x-hidden`}
+        className={`${archivo.variable} ${plexMono.variable} antialiased bg-paper text-ink font-sans overflow-x-hidden`}
       >
         {children}
       </body>
