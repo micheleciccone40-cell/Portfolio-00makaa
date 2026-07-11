@@ -537,7 +537,7 @@ export default function Home() {
           <SectionHeader
             index="01"
             title="Video Editing"
-            desc="Montaggio, motion graphics e storytelling per il canale YouTube di Berry La Voix. Ogni video è costruito per trattenere: ritmo, sound design e struttura narrativa."
+            desc="Montaggio dinamico, motion graphics, sound design e audio enhancement. Gestione completa della post-produzione per documentari, videoclip e contenuti digitali ad alto impatto visivo. Dal ritmo narrativo fino alla color correction e l'esportazione finale."
           />
 
           {/* Analytics panel */}
@@ -799,7 +799,7 @@ export default function Home() {
 
             {/* Overlay Lucchetto */}
             <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pointer-events-none">
-              <div className="bg-paper/90 backdrop-blur-md px-10 py-8 border border-line shadow-sm flex flex-col items-center gap-4">
+              <div className="bg-paper/90 backdrop-blur-md px-10 py-8 border border-line shadow-sm flex flex-col items-center gap-4 pointer-events-auto">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="miter" className="text-accent">
                   <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                   <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
@@ -807,6 +807,13 @@ export default function Home() {
                 <span className="font-mono text-[13px] tracking-[0.2em] font-bold text-ink text-center">
                   SEZIONE IN<br/>LAVORAZIONE
                 </span>
+                
+                <div className="mt-2 flex flex-col items-center gap-2">
+                  <span className="font-mono text-[9px] tracking-[0.1em] text-muted uppercase">se vuoi dare un'occhiata:</span>
+                  <a href="https://3dspark-u7re-iota.vercel.app/" target="_blank" className="font-mono text-[11px] font-semibold tracking-[0.2em] text-accent hover:text-ink transition-colors flex items-center gap-1">
+                    VAI AL SITO <ArrowNE />
+                  </a>
+                </div>
               </div>
             </div>
           </div>

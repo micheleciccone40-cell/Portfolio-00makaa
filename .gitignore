@@ -42,3 +42,5 @@ next-env.d.ts
 
 # Ignore heavy video assets for Github/Vercel
 /public/music-videos/
+
+video musicali/
