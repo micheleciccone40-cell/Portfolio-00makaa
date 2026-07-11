@@ -755,30 +755,49 @@ export default function Home() {
             desc="Modellazione organica, hard surface e configurazioni ottimizzate per la stampa 3D additiva. I primi lavori sono in produzione."
           />
 
-          {/* 3D Categories */}
-          <div className="grid grid-cols-1 gap-12 md:grid-cols-3">
-            {[
-              { src: '/3d-prints/lithophane-dog.jpeg', title: 'LYTOLAMP', desc: 'Lampade litofaniche personalizzate. Un mix di stampa 3D e luce che rivela foto e ricordi in modo unico.' },
-              { src: '/3d-prints/batman.jpeg', title: 'FUNKO POP', desc: 'Riproduzioni in stile Funko Pop stampate in 3D con materiali speciali (es. filamento effetto legno).' },
-              { src: '/3d-prints/nfc-card.jpeg', title: 'GADGET NFC', desc: 'Business card e smart tag NFC integrati in supporti stampati in 3D, come legno e bambù.' },
-            ].map((item, i) => (
-              <div key={i} className="reveal flex flex-col">
-                <div className="relative aspect-[4/5] w-full overflow-hidden border border-line bg-ink mb-6">
-                  <Image src={item.src} alt={item.title} fill className="object-cover transition-transform duration-700 hover:scale-105" />
-                </div>
-                <h3 className="font-mono text-[12px] tracking-[0.2em] font-semibold text-ink mb-3">{item.title}</h3>
-                <p className="text-sm leading-relaxed text-muted">{item.desc}</p>
+          {/* Wrapper per l'effetto In Lavorazione */}
+          <div className="relative mt-8">
+            {/* Contenuto sfocato */}
+            <div className="blur-[6px] opacity-50 pointer-events-none select-none transition-all duration-500">
+              {/* 3D Categories */}
+              <div className="grid grid-cols-1 gap-12 md:grid-cols-3">
+                {[
+                  { src: '/3d-prints/lithophane-dog.jpeg', title: 'LYTOLAMP', desc: 'Lampade litofaniche personalizzate. Un mix di stampa 3D e luce che rivela foto e ricordi in modo unico.' },
+                  { src: '/3d-prints/batman.jpeg', title: 'FUNKO POP', desc: 'Riproduzioni in stile Funko Pop stampate in 3D con materiali speciali (es. filamento effetto legno).' },
+                  { src: '/3d-prints/nfc-card.jpeg', title: 'GADGET NFC', desc: 'Business card e smart tag NFC integrati in supporti stampati in 3D, come legno e bambù.' },
+                ].map((item, i) => (
+                  <div key={i} className="reveal flex flex-col">
+                    <div className="relative aspect-[4/5] w-full overflow-hidden border border-line bg-ink mb-6">
+                      <Image src={item.src} alt={item.title} fill className="object-cover" />
+                    </div>
+                    <h3 className="font-mono text-[12px] tracking-[0.2em] font-semibold text-ink mb-3">{item.title}</h3>
+                    <p className="text-sm leading-relaxed text-muted">{item.desc}</p>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
 
-          <div className="mt-20 text-center reveal flex flex-col items-center">
-            <a href="https://3dspark.it" target="_blank" className="btn-solid inline-flex items-center gap-2">
-              VAI A 3D SPARK <ArrowNE />
-            </a>
-            <p className="mt-5 font-mono text-[10px] tracking-[0.2em] text-muted bg-panel border border-line px-4 py-2">
-              NOTA: IL SITO È ATTUALMENTE IN LAVORAZIONE
-            </p>
+              <div className="mt-20 text-center flex flex-col items-center">
+                <span className="btn-solid inline-flex items-center gap-2">
+                  VAI A 3D SPARK <ArrowNE />
+                </span>
+                <p className="mt-5 font-mono text-[10px] tracking-[0.2em] text-muted bg-panel border border-line px-4 py-2">
+                  NOTA: IL SITO È ATTUALMENTE IN LAVORAZIONE
+                </p>
+              </div>
+            </div>
+
+            {/* Overlay Lucchetto */}
+            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pointer-events-none">
+              <div className="bg-paper/90 backdrop-blur-md px-10 py-8 border border-line shadow-sm flex flex-col items-center gap-4">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="miter" className="text-accent">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+                <span className="font-mono text-[13px] tracking-[0.2em] font-bold text-ink text-center">
+                  SEZIONE IN<br/>LAVORAZIONE
+                </span>
+              </div>
+            </div>
           </div>
 
         </div>
