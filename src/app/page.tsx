@@ -140,7 +140,7 @@ interface CaseStudyData {
   title: string;
   desc: string;
   meta: { label: string; value: string }[];
-  link?: { href: string; label: string };
+  link?: { href: string; label: string; note?: string };
   hero: { src: string; alt: string; captionL: string; captionR: string; priority?: boolean };
   features: { tag: string; caption: string; src: string; alt: string; desc: string; fit?: 'cover' | 'contain' }[];
   split?: { tag: string; title: string; desc: string; src: string; alt: string };
@@ -166,9 +166,16 @@ function CaseStudy({ data }: { data: CaseStudyData }) {
             ))}
           </div>
           {data.link && (
-            <a href={data.link.href} target="_blank" className="btn-solid w-max">
-              {data.link.label} <ArrowNE />
-            </a>
+            <div className="flex flex-col gap-3 lg:items-end">
+              <a href={data.link.href} target="_blank" className="btn-solid w-max">
+                {data.link.label} <ArrowNE />
+              </a>
+              {data.link.note && (
+                <p className="max-w-[220px] font-mono text-[9px] leading-relaxed tracking-[0.15em] text-muted text-left lg:text-right">
+                  *{data.link.note}
+                </p>
+              )}
+            </div>
           )}
         </div>
       </div>
@@ -244,7 +251,11 @@ const berryCase: CaseStudyData = {
     { label: "STACK", value: "Next.js · GSAP · Shopify" },
     { label: "STATO", value: "Online" },
   ],
-  link: { href: "https://berry-site.vercel.app/", label: "Visita il sito live" },
+  link: { 
+    href: "https://berry-site.vercel.app/", 
+    label: "Visita il sito live",
+    note: "Il sito è temporaneamente ospitato in ambiente di staging (Vercel) in attesa della finalizzazione delle trattative per l'hosting ufficiale."
+  },
   hero: {
     src: "/berry-live-hero.webp",
     alt: "Hero del sito di Berry La Voix: giradischi in teca di vetro con sequenza scroll",
