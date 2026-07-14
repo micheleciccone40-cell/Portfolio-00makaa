@@ -100,6 +100,129 @@ function CustomCursor() {
   );
 }
 
+/* ─── Ethereal Background ─── */
+/* Flow-field dot grid (autonomous, subtle) + magnetic reveal that appears only
+   while the mouse moves and fades when idle. Monochrome ink, with a faint dark
+   purple glow around the moving cursor. Single fixed canvas behind all content. */
+function EtherealBackground() {
+  const ref = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const cv = ref.current;
+    if (!cv) return;
+    const ctx = cv.getContext('2d');
+    if (!ctx) return;
+
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const INK = '22,21,15';
+    const PUR = '74,45,107';
+    const S = 30;          // grid spacing
+    const R = 90;          // magnetic radius
+    const intensity = 0.85; // approved level
+
+    let W = 0, H = 0;
+    let pts: { x: number; y: number }[] = [];
+    let px = 0, py = 0, E = 0, t = 0, raf = 0;
+
+    const size = () => {
+      const w = window.innerWidth || document.documentElement.clientWidth;
+      const h = window.innerHeight || document.documentElement.clientHeight;
+      if (!w || !h || (w === W && h === H)) return;
+      W = w;
+      H = h;
+      cv.width = W * dpr;
+      cv.height = H * dpr;
+      cv.style.width = W + 'px';
+      cv.style.height = H + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      pts = [];
+      for (let y = -S; y < H + S; y += S)
+        for (let x = -S; x < W + S; x += S) pts.push({ x, y });
+    };
+
+    const onMove = (e: PointerEvent) => {
+      px = e.clientX;
+      py = e.clientY;
+      E = 1;
+    };
+
+    size();
+    window.addEventListener('resize', size);
+    window.addEventListener('pointermove', onMove, { passive: true });
+
+    const frame = () => {
+      if (!W || !H) size(); // self-correct if the viewport wasn't measurable at mount
+      if (!reduce) t += 0.016;
+      E *= 0.9;
+      if (E < 0.001) E = 0;
+      ctx.clearRect(0, 0, W, H);
+
+      // faint purple glow following the cursor, only while moving
+      if (E > 0.02) {
+        const g = ctx.createRadialGradient(px, py, 0, px, py, R * 1.7);
+        g.addColorStop(0, `rgba(${PUR},${(0.1 * E * intensity).toFixed(3)})`);
+        g.addColorStop(1, `rgba(${PUR},0)`);
+        ctx.fillStyle = g;
+        ctx.fillRect(0, 0, W, H);
+      }
+
+      for (let i = 0; i < pts.length; i++) {
+        const p = pts[i];
+        // base flow drift (autonomous, subtle)
+        const ang = Math.sin(p.x * 0.015 + t * 0.5) + Math.cos(p.y * 0.017 - t * 0.4);
+        let dx = Math.cos(ang * 3.14) * 4.5;
+        let dy = Math.sin(ang * 3.14) * 4.5;
+        const base = Math.sin(p.x * 0.02 + p.y * 0.02 + t) * 0.5 + 0.5;
+        let a = (0.07 + base * 0.06) * intensity;
+        let r = 0.8 + base * 0.7;
+        let infl = 0;
+
+        // magnetic — small radius, only while moving (scaled by energy E)
+        if (E > 0.02) {
+          const mdx = p.x - px;
+          const mdy = p.y - py;
+          const dist = Math.hypot(mdx, mdy);
+          if (dist < R) {
+            const f = (1 - dist / R) * E;
+            infl = f;
+            const pa = Math.atan2(mdy, mdx);
+            dx += Math.cos(pa) * f * 8;
+            dy += Math.sin(pa) * f * 8;
+            a += f * 0.22 * intensity;
+            r += f * 1.6;
+          }
+        }
+
+        ctx.beginPath();
+        ctx.arc(p.x + dx, p.y + dy, r, 0, 6.2832);
+        ctx.fillStyle =
+          infl > 0.03
+            ? `rgba(${PUR},${Math.min(a, 0.5).toFixed(3)})`
+            : `rgba(${INK},${a.toFixed(3)})`;
+        ctx.fill();
+      }
+
+      raf = requestAnimationFrame(frame);
+    };
+    frame();
+
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener('resize', size);
+      window.removeEventListener('pointermove', onMove);
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={ref}
+      aria-hidden="true"
+      style={{ position: 'fixed', inset: 0, zIndex: -10, pointerEvents: 'none' }}
+    />
+  );
+}
+
 /* ─── Animated Counter ─── */
 function AnimatedCounter({ value }: { value: number }) {
   const counterRef = useRef<HTMLSpanElement>(null);
@@ -446,7 +569,8 @@ export default function Home() {
   const avgViews = videos.length > 0 ? Math.round(videos.reduce((s, v) => s + v.views, 0) / videos.length) : 0;
 
   return (
-    <main ref={containerRef} className="relative min-h-screen w-full bg-paper">
+    <main ref={containerRef} className="relative min-h-screen w-full">
+      <EtherealBackground />
       <div className="grain" aria-hidden="true"></div>
       <CustomCursor />
 
