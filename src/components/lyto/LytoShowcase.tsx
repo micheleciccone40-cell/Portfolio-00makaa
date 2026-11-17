@@ -3,9 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import type { TrioLamp } from "./LampTrio";
+import type { CapModel } from "./CapTrio";
 import StageBackground from "./StageBackground";
 
 const LampTrio = dynamic(() => import("./LampTrio"), { ssr: false });
+const CapTrio = dynamic(() => import("./CapTrio"), { ssr: false });
 
 const SITE_URL = "https://lytoprint.it";
 
@@ -13,6 +15,13 @@ const LAMPS: (TrioLamp & { code: string; name: string })[] = [
   { id: "yugioh", code: "L.01", name: "Yu-Gi-Oh!", litho: "/lyto/litho-yugioh.webp" },
   { id: "charizard", code: "L.02", name: "Charizard", litho: "/lyto/litho-charizard.webp" },
   { id: "spiderman", code: "L.03", name: "Spider-Man", litho: "/lyto/litho-spiderman.webp" },
+];
+
+/** Tappi con il logo traforato, nello stesso ordine delle lampade. */
+const CAPS: CapModel[] = [
+  { id: "yugioh", url: "/lyto/caps/yugioh.stl", flip: true },
+  { id: "pokemon", url: "/lyto/caps/pokemon.stl" },
+  { id: "spiderman", url: "/lyto/caps/spiderman.stl" },
 ];
 
 const SITE_SHOTS = [
@@ -51,6 +60,8 @@ export default function LytoShowcase() {
   const [lit, setLit] = useState([true, true, true]);
   const litTarget = useRef([1, 1, 1]);
   const explodeTarget = useRef([0, 0, 0]);
+  /** Posizione orizzontale di ogni lampada sullo schermo (-1…1), scritta dal palco e letta dai tappi. */
+  const lampScreenX = useRef([-0.62, 0, 0.62]);
   const pending = useRef<(number | undefined)[]>([]);
   const [shot, setShot] = useState(0);
 
@@ -120,6 +131,7 @@ export default function LytoShowcase() {
                 explodeTarget={explodeTarget}
                 onPress={press}
                 onDoublePress={doublePress}
+                lampScreenX={lampScreenX}
               />
             </div>
           )}
@@ -138,6 +150,13 @@ export default function LytoShowcase() {
               </button>
             ))}
           </div>
+        </div>
+
+        {/* Tappi delle tre lampade, ognuno sotto la sua: logo traforato illuminato dal LED */}
+        <div className="reveal relative mt-2 aspect-[16/6] w-full" aria-label="I tappi delle tre lampade, con il logo traforato">
+          {mounted && (
+            <CapTrio caps={CAPS} active={inView} lampScreenX={lampScreenX} litTarget={litTarget} />
+          )}
         </div>
       </div>
 

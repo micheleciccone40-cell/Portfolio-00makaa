@@ -240,7 +240,9 @@ function Trio({
  * Inquadra sempre le tre lampade, qualunque sia il rapporto d'aspetto del pannello. Quando una lampada si
  * apre la camera arretra e sale quanto basta per tenerla tutta in quadro.
  */
-function Rig({ explodeNow }: { explodeNow: Ref<number[]> }) {
+const projected = new THREE.Vector3();
+
+function Rig({ explodeNow, lampScreenX }: { explodeNow: Ref<number[]>; lampScreenX?: Ref<number[]> }) {
   const camera = useThree((s) => s.camera) as THREE.PerspectiveCamera;
   const aspect = useThree((s) => s.size.width / s.size.height);
   const open = useRef(0);
@@ -258,6 +260,14 @@ function Rig({ explodeNow }: { explodeNow: Ref<number[]> }) {
     camera.position.set(0, centerY + Math.sin(tilt) * dist, Math.cos(tilt) * dist);
     camera.lookAt(0, centerY, 0);
     camera.updateProjectionMatrix();
+    camera.updateMatrixWorld();
+    // Dove cade ogni lampada sullo schermo (-1…1): i tappi sotto il palco si allineano qui.
+    if (lampScreenX) {
+      for (let i = 0; i < 3; i++) {
+        projected.set((i - 1) * SPACING, LAMP_CENTER_Y, 0).project(camera);
+        lampScreenX.current[i] = projected.x;
+      }
+    }
   });
   return null;
 }
@@ -296,6 +306,7 @@ export default function LampTrio({
   explodeTarget,
   onPress,
   onDoublePress,
+  lampScreenX,
   fallback,
 }: {
   lamps: TrioLamp[];
@@ -305,6 +316,8 @@ export default function LampTrio({
   explodeTarget: Ref<number[]>;
   onPress: (i: number) => void;
   onDoublePress: (i: number) => void;
+  /** Riempito con la posizione orizzontale di ogni lampada sullo schermo (-1…1). */
+  lampScreenX?: Ref<number[]>;
   fallback: ReactNode;
 }) {
   const explodeNow = useRef([0, 0, 0]);
@@ -317,7 +330,7 @@ export default function LampTrio({
         gl={{ antialias: true, alpha: true }}
       >
         <Lights />
-        <Rig explodeNow={explodeNow} />
+        <Rig explodeNow={explodeNow} lampScreenX={lampScreenX} />
         <Suspense fallback={null}>
           <Trio
             lamps={lamps}
