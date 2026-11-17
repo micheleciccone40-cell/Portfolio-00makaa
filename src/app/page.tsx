@@ -255,7 +255,7 @@ function AnimatedCounter({ value }: { value: number }) {
   return (
     <span
       ref={counterRef}
-      className="headline text-[clamp(2.8rem,6.5vw,6rem)] leading-none tabular-nums text-ink"
+      className="headline text-[clamp(2.6rem,5.5vw,4.75rem)] leading-none tabular-nums text-ink"
     >
       {formatViewsFull(value)}
     </span>
@@ -279,10 +279,10 @@ function CaseStudy({ data }: { data: CaseStudyData }) {
   return (
     <div>
       {/* Title + description + meta */}
-      <div className="reveal mb-10 grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-end">
+      <div className="reveal mb-8 grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-end">
         <div className="lg:col-span-7">
           <span className="mb-3 block font-mono text-[11px] tracking-[0.2em] text-muted">{data.kicker}</span>
-          <h3 className="headline mb-6 text-[clamp(2.2rem,5.5vw,4.5rem)] leading-[0.95]">{data.title}</h3>
+          <h3 className="headline mb-5 text-[clamp(2rem,4.5vw,3.5rem)] leading-[0.95]">{data.title}</h3>
           <p className="max-w-2xl text-base leading-relaxed text-muted md:text-lg">{data.desc}</p>
         </div>
         <div className="flex flex-col gap-6 lg:col-span-5 lg:items-end">
@@ -310,7 +310,7 @@ function CaseStudy({ data }: { data: CaseStudyData }) {
       </div>
 
       {/* Hero frame */}
-      <div className="reveal mb-10">
+      <div className="reveal mb-8">
         <div className="frame-caption">
           <span>{data.hero.captionL}</span>
           <span className="hidden sm:block">{data.hero.captionR}</span>
@@ -327,7 +327,7 @@ function CaseStudy({ data }: { data: CaseStudyData }) {
       </div>
 
       {/* Feature two-up */}
-      <div className="mb-10 grid grid-cols-1 gap-10 md:grid-cols-2">
+      <div className="mb-8 grid grid-cols-1 gap-8 md:grid-cols-2">
         {data.features.map((f) => (
           <div key={f.tag} className="reveal">
             <div className="frame-caption">
@@ -351,12 +351,12 @@ function CaseStudy({ data }: { data: CaseStudyData }) {
       {/* Split panel */}
       {data.split && (
         <div className="reveal flex flex-col overflow-hidden border border-line bg-panel md:flex-row">
-          <div className="flex flex-1 flex-col justify-center p-8 md:p-16">
+          <div className="flex flex-1 flex-col justify-center p-8 md:p-12">
             <span className="mb-4 block font-mono text-[11px] tracking-[0.2em] text-accent">{data.split.tag}</span>
             <h4 className="headline mb-5 text-2xl md:text-4xl">{data.split.title}</h4>
             <p className="max-w-md text-base leading-relaxed text-muted md:text-lg">{data.split.desc}</p>
           </div>
-          <div className="relative min-h-[320px] flex-[1.2] border-t border-line bg-ink md:min-h-[440px] md:border-t-0 md:border-l">
+          <div className="relative min-h-[320px] flex-[1.2] border-t border-line bg-ink md:min-h-[380px] md:border-t-0 md:border-l">
             <Image
               src={data.split.src}
               alt={data.split.alt}
@@ -455,9 +455,9 @@ const braceCase: CaseStudyData = {
 /* ─── Section Header ─── */
 function SectionHeader({ index, title, desc }: { index: string; title: string; desc: string }) {
   return (
-    <div className="reveal mb-14 flex flex-col gap-5 border-b border-line pb-10 md:mb-20">
+    <div className="reveal mb-10 flex flex-col gap-4 border-b border-line pb-8 md:mb-12">
       <span className="block font-mono text-[11px] tracking-[0.2em] text-accent">({index})</span>
-      <h2 className="headline text-[clamp(2.5rem,7vw,5.5rem)] leading-[0.9] text-ink">{title}</h2>
+      <h2 className="headline text-[clamp(2.2rem,5.5vw,4.25rem)] leading-[0.9] text-ink">{title}</h2>
       <p className="max-w-xl text-base leading-relaxed text-muted md:text-lg">{desc}</p>
     </div>
   );
@@ -581,7 +581,7 @@ export default function Home() {
 
       {/* ─── Header ─── */}
       <header className="fixed inset-x-0 top-0 z-50 border-b border-line bg-paper/85 backdrop-blur-md">
-        <nav className="mx-auto flex h-16 max-w-[1440px] items-center justify-between px-6 md:px-10">
+        <nav className="mx-auto flex h-16 max-w-[1320px] items-center justify-between px-6 md:px-10">
           <a href="#" className="font-mono text-xs font-medium tracking-[0.2em] text-ink">
             MICHELE CICCONE<span className="text-accent">*</span>
           </a>
@@ -597,8 +597,8 @@ export default function Home() {
       </header>
 
       {/* ─── Hero ─── */}
-      <section className="px-6 pt-36 pb-0 md:px-10 md:pt-48">
-        <div className="mx-auto max-w-[1440px]">
+      <section className="px-6 pt-28 pb-0 md:px-10 md:pt-36">
+        <div className="mx-auto max-w-[1320px]">
 
           <div className="mb-6 flex items-center justify-between font-mono text-[11px] tracking-[0.2em] text-muted">
             <span className="hero-meta">PORTFOLIO — 2026</span>
@@ -609,12 +609,12 @@ export default function Home() {
             </span>
           </div>
 
-          <h1 className="headline text-[clamp(3.4rem,12.5vw,11rem)] leading-[0.84] tracking-[-0.03em] text-ink">
+          <h1 className="headline text-[clamp(3.2rem,10.5vw,9rem)] leading-[0.84] tracking-[-0.03em] text-ink">
             <span className="block overflow-hidden"><span className="hero-line block">Michele</span></span>
             <span className="block overflow-hidden"><span className="hero-line text-stroke block">Ciccone</span></span>
           </h1>
 
-          <div className="mt-12 grid grid-cols-1 gap-10 md:mt-16 md:grid-cols-12 md:gap-8">
+          <div className="mt-8 grid grid-cols-1 gap-8 md:mt-12 md:grid-cols-12 md:gap-8">
             <p className="hero-meta max-w-xl text-lg leading-relaxed text-muted md:col-span-7 md:text-xl">
               Racconto storie con il montaggio e le costruisco con il codice.
               Video editing e motion design per YouTube, piattaforme web sviluppate
@@ -628,16 +628,16 @@ export default function Home() {
           </div>
 
           {/* Stats strip */}
-          <div className="reveal mt-16 grid grid-cols-1 divide-y divide-line border-y border-line sm:grid-cols-3 sm:divide-x sm:divide-y-0 md:mt-24">
-            <div className="flex items-baseline justify-between gap-4 py-6 sm:block sm:px-2 sm:py-8">
+          <div className="reveal mt-12 grid grid-cols-1 divide-y divide-line border-y border-line sm:grid-cols-3 sm:divide-x sm:divide-y-0 md:mt-16">
+            <div className="flex items-baseline justify-between gap-4 py-6 sm:block sm:px-2 sm:py-6">
               <span className="headline block text-3xl md:text-5xl">{isLoaded && totalViews > 0 ? formatViews(totalViews) : '—'}</span>
               <span className="mt-2 block font-mono text-[10px] tracking-[0.2em] text-muted">VISUALIZZAZIONI GENERATE</span>
             </div>
-            <div className="flex items-baseline justify-between gap-4 py-6 sm:block sm:px-8 sm:py-8">
+            <div className="flex items-baseline justify-between gap-4 py-6 sm:block sm:px-8 sm:py-6">
               <span className="headline block text-3xl md:text-5xl">{pad(videos.length)}</span>
               <span className="mt-2 block font-mono text-[10px] tracking-[0.2em] text-muted">VIDEO EDITATI</span>
             </div>
-            <div className="flex items-baseline justify-between gap-4 py-6 sm:block sm:px-8 sm:py-8">
+            <div className="flex items-baseline justify-between gap-4 py-6 sm:block sm:px-8 sm:py-6">
               <span className="headline block text-3xl md:text-5xl">02</span>
               <span className="mt-2 block font-mono text-[10px] tracking-[0.2em] text-muted">PIATTAFORME SVILUPPATE</span>
             </div>
@@ -647,7 +647,7 @@ export default function Home() {
       </section>
 
       {/* ─── Title marquee ─── */}
-      <div className="marquee reveal mt-16 border-y border-line py-4 md:mt-24" aria-hidden="true">
+      <div className="marquee reveal mt-12 border-y border-line py-3 md:mt-16" aria-hidden="true">
         <div className="marquee-track font-mono text-[11px] tracking-[0.2em] text-muted uppercase">
           {[...videos, ...videos].map((v, i) => (
             <span key={i} className="inline-flex items-center gap-12">
@@ -659,8 +659,8 @@ export default function Home() {
       </div>
 
       {/* ─── 01 / Video Editing ─── */}
-      <section id="video" className="px-6 py-24 md:px-10 md:py-36">
-        <div className="mx-auto max-w-[1440px]">
+      <section id="video" className="px-6 py-16 md:px-10 md:py-24">
+        <div className="mx-auto max-w-[1320px]">
 
           <SectionHeader
             index="01"
@@ -669,7 +669,7 @@ export default function Home() {
           />
 
           {/* Analytics panel */}
-          <div className="analytics-panel reveal mb-16 grid grid-cols-1 border border-line bg-panel lg:grid-cols-5 md:mb-20">
+          <div className="analytics-panel reveal mb-10 grid grid-cols-1 border border-line bg-panel lg:grid-cols-5 md:mb-12">
 
             {/* Total counter */}
             <div className="flex flex-col justify-between border-b border-line lg:col-span-2 lg:border-r lg:border-b-0">
@@ -680,7 +680,7 @@ export default function Home() {
                   LIVE
                 </span>
               </div>
-              <div className="flex flex-1 flex-col justify-center px-6 py-12 md:px-8">
+              <div className="flex flex-1 flex-col justify-center px-6 py-8 md:px-8">
                 <AnimatedCounter value={isLoaded ? totalViews : 0} />
                 <span className="mt-4 font-mono text-[10px] tracking-[0.25em] text-muted">
                   VISUALIZZAZIONI TOTALI
@@ -770,6 +770,21 @@ export default function Home() {
                 </div>
               </button>
             ))}
+            {/* Casella finale: chiude la griglia e porta al canale */}
+            <a
+              href="https://www.youtube.com/channel/UCDeppuI2KF-AMmJfvdvwiuA/videos"
+              target="_blank"
+              rel="noopener"
+              className="reveal group flex min-h-[180px] flex-col justify-between bg-ink p-5 text-paper transition-colors hover:bg-accent"
+            >
+              <span className="font-mono text-[9px] tracking-[0.18em] text-paper/60 group-hover:text-ink">ARCHIVIO</span>
+              <span className="headline text-xl leading-[1.05] group-hover:text-ink md:text-2xl">
+                Tutti i video sul canale
+              </span>
+              <span className="inline-flex items-center gap-2 font-mono text-[10px] tracking-[0.18em] text-paper/80 group-hover:text-ink">
+                YOUTUBE — BERRY <ArrowNE />
+              </span>
+            </a>
           </div>
 
         </div>
@@ -808,8 +823,8 @@ export default function Home() {
       )}
 
       {/* ─── 02 / 3D — LytoPrint ─── */}
-      <section id="3d" className="border-t border-line px-6 py-24 md:px-10 md:py-36">
-        <div className="mx-auto max-w-[1440px]">
+      <section id="3d" className="border-t border-line px-6 py-16 md:px-10 md:py-24">
+        <div className="mx-auto max-w-[1320px]">
 
           <SectionHeader
             index="02"
@@ -823,8 +838,8 @@ export default function Home() {
       </section>
 
       {/* ─── 03 / Web Development ─── */}
-      <section id="web" className="border-t border-line px-6 py-24 md:px-10 md:py-36">
-        <div className="mx-auto max-w-[1440px]">
+      <section id="web" className="border-t border-line px-6 py-16 md:px-10 md:py-24">
+        <div className="mx-auto max-w-[1320px]">
 
           <SectionHeader
             index="03"
@@ -832,8 +847,25 @@ export default function Home() {
             desc="Piattaforme interattive progettate per scalare, connettere e convertire. Dalla direzione creativa al deploy: identità visiva, animazioni GSAP sincronizzate allo scroll, API custom e integrazioni e-commerce. Due casi studio, lo stesso metodo — ogni interfaccia nasce dal mondo che deve raccontare."
           />
 
+          {/* Avviso: progetti mostrati solo come concept */}
+          <div
+            role="note"
+            className="reveal mb-8 flex gap-4 border border-accent/40 bg-accent/[0.06] px-5 py-4 md:items-center md:px-6"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square" className="mt-0.5 shrink-0 text-accent md:mt-0" aria-hidden="true">
+              <path d="M12 3L22 20H2L12 3Z" />
+              <path d="M12 10v4M12 17v.5" />
+            </svg>
+            <p className="text-[13px] leading-relaxed text-muted md:text-sm">
+              <span className="mr-2 font-mono text-[10px] font-semibold tracking-[0.2em] text-ink">AVVISO</span>
+              I progetti di questa sezione sono mostrati solo a scopo illustrativo: sono lavori ancora in corso
+              oppure proposte declinate o scartate. Vanno intesi esclusivamente come concept e non sono legati in
+              alcun modo alle persone o alle attività a cui fanno riferimento.
+            </p>
+          </div>
+
           {/* Case Studies Selection */}
-          <div className="mb-20 grid grid-cols-1 gap-6 md:grid-cols-2">
+          <div className="mb-12 grid grid-cols-1 gap-6 md:grid-cols-2">
             {[berryCase, braceCase].map((c) => (
               <button
                 key={c.id}
@@ -865,19 +897,19 @@ export default function Home() {
       </section>
 
       {/* ─── 04 / Contact ─── */}
-      <footer id="contact" className="bg-accent px-6 pt-20 pb-10 text-ink md:px-10 md:pt-28">
-        <div className="mx-auto max-w-[1440px]">
+      <footer id="contact" className="bg-accent px-6 pt-16 pb-8 text-ink md:px-10 md:pt-20">
+        <div className="mx-auto max-w-[1320px]">
 
-          <div className="mb-12 flex items-center justify-between font-mono text-[11px] font-medium tracking-[0.2em] md:mb-16">
+          <div className="mb-8 flex items-center justify-between font-mono text-[11px] font-medium tracking-[0.2em] md:mb-10">
             <span>(04) — CONTATTO</span>
             <span className="hidden sm:block">RISPONDO ENTRO 24H</span>
           </div>
 
-          <h2 className="headline text-[clamp(2.1rem,10.5vw,11rem)] leading-[0.82]">
+          <h2 className="headline text-[clamp(2.1rem,8.5vw,8rem)] leading-[0.82]">
             Parliamone.
           </h2>
 
-          <div className="mt-14 grid grid-cols-1 items-start gap-16 md:mt-20 md:grid-cols-2">
+          <div className="mt-10 grid grid-cols-1 items-start gap-10 md:mt-14 md:grid-cols-2">
             <div className="flex flex-col gap-8">
               <p className="max-w-md text-lg leading-relaxed text-ink/80 md:text-xl">
                 Un video da montare, una piattaforma da costruire o un&apos;idea ancora da definire — scrivimi.
@@ -936,7 +968,7 @@ export default function Home() {
             </form>
           </div>
 
-          <div className="mt-20 flex flex-col justify-between gap-2 border-t border-ink/20 pt-6 font-mono text-[10px] font-medium tracking-[0.2em] sm:flex-row md:mt-28">
+          <div className="mt-14 flex flex-col justify-between gap-2 border-t border-ink/20 pt-6 font-mono text-[10px] font-medium tracking-[0.2em] sm:flex-row md:mt-16">
             <span>© 2026 MICHELE CICCONE</span>
             <span>00MAKAA — ITALIA</span>
           </div>

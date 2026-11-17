@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import type { TrioLamp } from "./LampTrio";
+import StageBackground from "./StageBackground";
 
 const LampTrio = dynamic(() => import("./LampTrio"), { ssr: false });
 
@@ -49,6 +50,8 @@ export default function LytoShowcase() {
   const [mounted, setMounted] = useState(false);
   const [lit, setLit] = useState([true, true, true]);
   const litTarget = useRef([1, 1, 1]);
+  const explodeTarget = useRef([0, 0, 0]);
+  const pending = useRef<(number | undefined)[]>([]);
   const [shot, setShot] = useState(0);
 
   // Il canvas nasce solo quando la sezione si avvicina, e si ferma quando esce dallo schermo.
@@ -78,22 +81,35 @@ export default function LytoShowcase() {
     setLit(litTarget.current.map((v) => v > 0.5));
   };
 
+  // Click singolo = luce, doppio click = scomponi/ricomponi. Il click singolo aspetta un attimo per capire
+  // se sta arrivando il secondo, così il doppio click non fa anche lampeggiare la luce.
+  const press = (i: number) => {
+    if (pending.current[i] !== undefined) return;
+    pending.current[i] = window.setTimeout(() => {
+      pending.current[i] = undefined;
+      toggle(i);
+    }, 260);
+  };
+  const doublePress = (i: number) => {
+    window.clearTimeout(pending.current[i]);
+    pending.current[i] = undefined;
+    explodeTarget.current[i] = explodeTarget.current[i] > 0.5 ? 0 : 1;
+  };
+  useEffect(() => () => pending.current.forEach((t) => window.clearTimeout(t)), []);
+
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
       {/* ─── Sinistra: tre LYTOLAMP reali in 3D ─── */}
       <div className="reveal lg:col-span-8">
         <div className="frame-caption">
           <span>LYTOLAMP — LITOFANIE STAMPATE IN 3D</span>
-          <span className="hidden sm:block">TOCCA UNA LAMPADA PER SPEGNERLA</span>
+          <span className="hidden sm:block">CLICK: LUCE · DOPPIO CLICK: SCOMPONI</span>
         </div>
         <div
           ref={stageRef}
-          className="relative aspect-[4/3] w-full overflow-hidden border border-line sm:aspect-[16/10]"
-          style={{
-            background:
-              "radial-gradient(ellipse 70% 55% at 50% 62%, rgba(255,170,90,0.16), rgba(255,170,90,0) 70%), #0e0d0b",
-          }}
+          className="relative aspect-[4/3] w-full touch-manipulation overflow-hidden border border-line bg-[#050505] sm:aspect-[16/10]"
         >
+          {mounted && <StageBackground active={inView} />}
           {mounted && (
             <div className="absolute inset-0">
               <LampTrio
@@ -101,7 +117,9 @@ export default function LytoShowcase() {
                 active={inView}
                 fallback={<StaticFallback />}
                 litTarget={litTarget}
-                onToggle={toggle}
+                explodeTarget={explodeTarget}
+                onPress={press}
+                onDoublePress={doublePress}
               />
             </div>
           )}
@@ -109,7 +127,8 @@ export default function LytoShowcase() {
             {LAMPS.map((l, i) => (
               <button
                 key={l.id}
-                onClick={() => toggle(i)}
+                onClick={() => press(i)}
+                onDoubleClick={() => doublePress(i)}
                 className="pointer-events-auto mx-auto flex flex-col items-center gap-1 font-mono text-[9px] tracking-[0.2em] text-[#e9dcc6]/70 transition-colors hover:text-[#ffcf96] sm:text-[10px]"
                 aria-pressed={lit[i]}
                 aria-label={`${lit[i] ? "Spegni" : "Accendi"} la lampada ${l.name}`}

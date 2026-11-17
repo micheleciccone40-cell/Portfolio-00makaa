@@ -16,9 +16,32 @@ export interface TrioLamp {
   litho: string;
 }
 
+type Ref<T> = { current: T };
+type PartId = "base" | "ring" | "body" | "cap";
+const PART_IDS: readonly PartId[] = ["base", "ring", "body", "cap"];
+
 const SPACING = 1.62;
 const INNER_OFF = new THREE.Color("#3A3129");
 const INNER_ON = new THREE.Color("#FFD7A3");
+
+/* ─── Scomposizione (come su lytoprint.it, src/three/explode.ts) ─── */
+
+/** Spostamento verticale a lampada aperta (mm): la base resta a terra, gli altri pezzi salgono. */
+const EXPLODE_GAP_MM: Record<PartId, number> = { base: 0, ring: 34, body: 70, cap: 122 };
+/** Rotazione massima dei pezzi che si avvitano: corpo sull'aggancio, tappo sul corpo. */
+const TWIST: Record<PartId, number> = { base: 0, ring: 0, body: 0.9, cap: 1.4 };
+/** Altezza della lampada aperta, in unità di scena (serve alla camera per inquadrarla tutta). */
+const EXPLODED_TOP = (ASSEMBLY.cap + 5.2 + EXPLODE_GAP_MM.cap) * SCENE_SCALE;
+
+const clamp01 = (x: number) => Math.min(1, Math.max(0, x));
+const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+const easeOutCubic = (t: number) => 1 - Math.pow(1 - clamp01(t), 3);
+const easeInOutCubic = (t: number) => {
+  const x = clamp01(t);
+  return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+};
+/** Montaggio in sequenza dal basso: ogni pezzo parte 0.2 dopo il precedente e dura 0.4. */
+const partAssembled = (t: number, i: number) => clamp01((clamp01(t) * 5 - i) / 2);
 
 /* ─── Una lampada: base + anello dal GLB, corpo litofania generato come tubo, tappo ─── */
 function Lamp({
@@ -26,17 +49,24 @@ function Lamp({
   texture,
   x,
   phase,
-  litTarget,
   delay,
-  onToggle,
+  litTarget,
+  explodeTarget,
+  explodeNow,
+  onPress,
+  onDoublePress,
 }: {
   index: number;
   texture: THREE.Texture;
   x: number;
   phase: number;
-  litTarget: { current: number[] };
   delay: number;
-  onToggle: () => void;
+  litTarget: Ref<number[]>;
+  explodeTarget: Ref<number[]>;
+  /** Scomposizione attuale di ogni lampada, letta dalla camera. */
+  explodeNow: Ref<number[]>;
+  onPress: () => void;
+  onDoublePress: () => void;
 }) {
   const { nodes } = useGLTF(MODEL_URL) as unknown as { nodes: Record<string, THREE.Mesh> };
 
@@ -74,14 +104,20 @@ function Lamp({
     [materials, geometries],
   );
 
-  const group = useRef<THREE.Group>(null);
+  const spin = useRef<THREE.Group>(null);
+  const baseG = useRef<THREE.Group>(null);
+  const ringG = useRef<THREE.Group>(null);
+  const bodyG = useRef<THREE.Group>(null);
+  const capG = useRef<THREE.Group>(null);
   const light = useRef<THREE.PointLight>(null);
   const baseLight = useRef<THREE.PointLight>(null);
   const glow = useRef(0);
+  const explode = useRef(0);
   const clock = useRef(0);
 
   useFrame((_, dt) => {
     clock.current += dt;
+
     // Accensione a cascata: ogni lampada aspetta il suo turno.
     const target = clock.current > delay ? litTarget.current[index] : 0;
     glow.current += (target - glow.current) * (1 - Math.exp(-dt * 3));
@@ -91,7 +127,22 @@ function Lamp({
     materials.rim.emissiveIntensity = g * 0.55;
     if (light.current) light.current.intensity = g * 6;
     if (baseLight.current) baseLight.current.intensity = g * 1.5;
-    if (group.current) group.current.rotation.y = phase + clock.current * 0.32;
+
+    // Scomposizione a cascata con uno smorzamento lento, che dà peso ai pezzi.
+    explode.current += (explodeTarget.current[index] - explode.current) * (1 - Math.exp(-dt * 2.2));
+    explodeNow.current[index] = explode.current;
+    const assembled = 1 - explode.current;
+    const groups: Record<PartId, THREE.Group | null> = { base: baseG.current, ring: ringG.current, body: bodyG.current, cap: capG.current };
+    PART_IDS.forEach((id, i) => {
+      const grp = groups[id];
+      if (!grp) return;
+      const a = partAssembled(assembled, i);
+      grp.position.y = ASSEMBLY[id] + (1 - easeInOutCubic(a)) * EXPLODE_GAP_MM[id];
+      grp.rotation.y = TWIST[id] * (1 - easeOutCubic(a));
+    });
+
+    // Gira su se stessa; aperta rallenta, così i pezzi si leggono.
+    if (spin.current) spin.current.rotation.y += dt * lerp(0.32, 0.12, explode.current);
   });
 
   return (
@@ -99,27 +150,31 @@ function Lamp({
       position={[x, 0, 0]}
       onClick={(e) => {
         e.stopPropagation();
-        onToggle();
+        onPress();
+      }}
+      onDoubleClick={(e) => {
+        e.stopPropagation();
+        onDoublePress();
       }}
       onPointerOver={() => (document.body.style.cursor = "pointer")}
       onPointerOut={() => (document.body.style.cursor = "")}
     >
-      <group ref={group} scale={SCENE_SCALE}>
-        <group position-y={ASSEMBLY.base}>
+      <group ref={spin} rotation-y={phase} scale={SCENE_SCALE}>
+        <group ref={baseG} position-y={ASSEMBLY.base}>
           <PartMesh node={nodes.base} material={materials.base} />
           <pointLight ref={baseLight} position={[0, 75, 0]} color="#FFC98A" distance={3} decay={2} />
         </group>
-        <group position-y={ASSEMBLY.ring}>
+        <group ref={ringG} position-y={ASSEMBLY.ring}>
           <PartMesh node={nodes.ring} material={materials.ring} />
         </group>
-        <group position-y={ASSEMBLY.body}>
+        <group ref={bodyG} position-y={ASSEMBLY.body}>
           <mesh geometry={geometries.outer} material={materials.body} />
           <mesh geometry={geometries.inner} material={materials.inner} />
           <mesh geometry={geometries.rim} material={materials.rim} position={[0, BODY.heightMm, 0]} />
           <mesh geometry={geometries.rim} material={materials.rim} rotation={[Math.PI, 0, 0]} />
           <pointLight ref={light} position={[0, BODY.heightMm * 0.3, 0]} color="#FFB566" distance={6} decay={2} />
         </group>
-        <group position-y={ASSEMBLY.cap}>
+        <group ref={capG} position-y={ASSEMBLY.cap}>
           <PartMesh node={nodes.cap} material={materials.cap} />
         </group>
       </group>
@@ -135,11 +190,17 @@ function PartMesh({ node, material }: { node: THREE.Mesh; material: THREE.Materi
 function Trio({
   lamps,
   litTarget,
-  onToggle,
+  explodeTarget,
+  explodeNow,
+  onPress,
+  onDoublePress,
 }: {
   lamps: TrioLamp[];
-  litTarget: { current: number[] };
-  onToggle: (i: number) => void;
+  litTarget: Ref<number[]>;
+  explodeTarget: Ref<number[]>;
+  explodeNow: Ref<number[]>;
+  onPress: (i: number) => void;
+  onDoublePress: (i: number) => void;
 }) {
   const loaded = useTexture(lamps.map((l) => l.litho));
   const textures = useMemo(() => {
@@ -165,27 +226,39 @@ function Trio({
           phase={-0.35 + i * 0.35}
           delay={0.35 + i * 0.45}
           litTarget={litTarget}
-          onToggle={() => onToggle(i)}
+          explodeTarget={explodeTarget}
+          explodeNow={explodeNow}
+          onPress={() => onPress(i)}
+          onDoublePress={() => onDoublePress(i)}
         />
       ))}
     </>
   );
 }
 
-/** Inquadra sempre le tre lampade, qualunque sia il rapporto d'aspetto del pannello. */
-function Rig() {
+/**
+ * Inquadra sempre le tre lampade, qualunque sia il rapporto d'aspetto del pannello. Quando una lampada si
+ * apre la camera arretra e sale quanto basta per tenerla tutta in quadro.
+ */
+function Rig({ explodeNow }: { explodeNow: Ref<number[]> }) {
   const camera = useThree((s) => s.camera) as THREE.PerspectiveCamera;
   const aspect = useThree((s) => s.size.width / s.size.height);
-  useEffect(() => {
+  const open = useRef(0);
+  useFrame(() => {
+    const k = easeInOutCubic(Math.max(...explodeNow.current));
+    if (Math.abs(k - open.current) < 1e-4 && camera.userData.aspect === aspect) return;
+    open.current = k;
+    camera.userData.aspect = aspect;
     const half = THREE.MathUtils.degToRad(camera.fov / 2);
     const needW = SPACING * 2 + 2.1;
-    const needH = 3.25;
+    const needH = lerp(3.25, EXPLODED_TOP + 1.5, k);
+    const centerY = lerp(LAMP_CENTER_Y - 0.32, EXPLODED_TOP / 2 - 0.3, k);
     const dist = Math.max(needH / 2 / Math.tan(half), needW / 2 / (Math.tan(half) * aspect));
     const tilt = 0.13;
-    camera.position.set(0, LAMP_CENTER_Y + Math.sin(tilt) * dist, Math.cos(tilt) * dist);
-    camera.lookAt(0, LAMP_CENTER_Y - 0.32, 0);
+    camera.position.set(0, centerY + Math.sin(tilt) * dist, Math.cos(tilt) * dist);
+    camera.lookAt(0, centerY, 0);
     camera.updateProjectionMatrix();
-  }, [camera, aspect]);
+  });
   return null;
 }
 
@@ -220,16 +293,21 @@ export default function LampTrio({
   lamps,
   active,
   litTarget,
-  onToggle,
+  explodeTarget,
+  onPress,
+  onDoublePress,
   fallback,
 }: {
   lamps: TrioLamp[];
   /** false quando la sezione è fuori schermo: il rendering si ferma. */
   active: boolean;
-  litTarget: { current: number[] };
-  onToggle: (i: number) => void;
+  litTarget: Ref<number[]>;
+  explodeTarget: Ref<number[]>;
+  onPress: (i: number) => void;
+  onDoublePress: (i: number) => void;
   fallback: ReactNode;
 }) {
+  const explodeNow = useRef([0, 0, 0]);
   return (
     <ErrorBoundary fallback={fallback}>
       <Canvas
@@ -239,9 +317,16 @@ export default function LampTrio({
         gl={{ antialias: true, alpha: true }}
       >
         <Lights />
-        <Rig />
+        <Rig explodeNow={explodeNow} />
         <Suspense fallback={null}>
-          <Trio lamps={lamps} litTarget={litTarget} onToggle={onToggle} />
+          <Trio
+            lamps={lamps}
+            litTarget={litTarget}
+            explodeTarget={explodeTarget}
+            explodeNow={explodeNow}
+            onPress={onPress}
+            onDoublePress={onDoublePress}
+          />
         </Suspense>
       </Canvas>
     </ErrorBoundary>
