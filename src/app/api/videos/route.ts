@@ -12,6 +12,11 @@ const KNOWN_VIDEO_IDS = [
   "BCgCvOU98yQ",  // La Tragica Morte di The Notorious B.I.G.
   "hp4vxRc2Fog",  // Il CROLLO di Lil Baby
   "1-yo3i5g4Bs",  // Perché il mondo si è rivoltato contro Kanye West
+  "jsIPBm6_6aY",  // CHIEF KEEF: il talento sprecato di una leggenda
+  "vaYKt_s2nUw",  // Come King Von ha distrutto la vita di Quando Rondo
+  "QUETsGaTd5s",  // Werenoi: il rapper francese sfruttato fino alla morte
+  "slQ2fCVIOIc",  // DJ Khaled: come ha distrutto la sua reputazione
+  "0DMQ5YEECqQ",  // 11 SETTEMBRE: e se fosse tutto un complotto? (BERRY II)
 ];
 
 export const revalidate = 3600;

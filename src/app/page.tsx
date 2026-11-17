@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import LytoShowcase from '@/components/lyto/LytoShowcase';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -19,9 +20,14 @@ interface VideoData {
 const fallbackVideos: VideoData[] = [
   { videoId: "3M59E7aQeIs", title: "Maes: il primo rapper ricercato dall'Interpol", views: 394069, embedUrl: "https://www.youtube.com/embed/3M59E7aQeIs" },
   { videoId: "YKQp8Ncj8Hw", title: "Michael Jackson è ancora vivo", views: 290070, embedUrl: "https://www.youtube.com/embed/YKQp8Ncj8Hw" },
+  { videoId: "jsIPBm6_6aY", title: "CHIEF KEEF: il talento sprecato di una leggenda", views: 161664, embedUrl: "https://www.youtube.com/embed/jsIPBm6_6aY" },
+  { videoId: "vaYKt_s2nUw", title: "Come King Von ha distrutto la vita di Quando Rondo", views: 132006, embedUrl: "https://www.youtube.com/embed/vaYKt_s2nUw" },
+  { videoId: "QUETsGaTd5s", title: "Werenoi: il rapper francese sfruttato fino alla morte", views: 88697, embedUrl: "https://www.youtube.com/embed/QUETsGaTd5s" },
   { videoId: "ZLbaSpFQ_LY", title: "DEATH ROW: l'etichetta discografica più pericolosa di sempre", views: 86099, embedUrl: "https://www.youtube.com/embed/ZLbaSpFQ_LY" },
+  { videoId: "slQ2fCVIOIc", title: "DJ Khaled: come ha DISTRUTTO la sua reputazione", views: 84807, embedUrl: "https://www.youtube.com/embed/slQ2fCVIOIc" },
   { videoId: "_FjjohhodPM", title: "Come NLE Choppa ha distrutto la sua reputazione", views: 85193, embedUrl: "https://www.youtube.com/embed/_FjjohhodPM" },
   { videoId: "BCgCvOU98yQ", title: "La Tragica Morte di The Notorious B.I.G.", views: 66386, embedUrl: "https://www.youtube.com/embed/BCgCvOU98yQ" },
+  { videoId: "0DMQ5YEECqQ", title: "11 SETTEMBRE: e se fosse tutto un complotto?", views: 37236, embedUrl: "https://www.youtube.com/embed/0DMQ5YEECqQ" },
   { videoId: "hp4vxRc2Fog", title: "Il CROLLO di Lil Baby", views: 29137, embedUrl: "https://www.youtube.com/embed/hp4vxRc2Fog" },
   { videoId: "1-yo3i5g4Bs", title: "Perché il mondo si è rivoltato contro Kanye West", views: 0, embedUrl: "https://www.youtube.com/embed/1-yo3i5g4Bs" },
 ];
@@ -475,7 +481,6 @@ export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [activeVideo, setActiveVideo] = useState<VideoData | null>(null);
   const [activeWebCase, setActiveWebCase] = useState<string | null>(null);
-  const [showMusicVideos, setShowMusicVideos] = useState(false);
 
   const closeLightbox = useCallback(() => setActiveVideo(null), []);
 
@@ -582,9 +587,8 @@ export default function Home() {
           </a>
           <ul className="hidden items-center gap-9 font-mono text-[11px] tracking-[0.18em] md:flex">
             <li><a href="#video" className="text-muted transition-colors hover:text-ink"><span className="text-accent">01</span> VIDEO</a></li>
-            <li><a href="#music-videos" className="text-muted transition-colors hover:text-ink"><span className="text-accent">02</span> MUSIC VIDEO</a></li>
+            <li><a href="#3d" className="text-muted transition-colors hover:text-ink"><span className="text-accent">02</span> 3D</a></li>
             <li><a href="#web" className="text-muted transition-colors hover:text-ink"><span className="text-accent">03</span> WEB</a></li>
-            <li><a href="#3d" className="text-muted transition-colors hover:text-ink"><span className="text-accent">04</span> 3D</a></li>
           </ul>
           <a href="#contact" className="inline-flex items-center gap-2 font-mono text-[11px] font-medium tracking-[0.18em] text-ink transition-colors hover:text-accent">
             CONTATTAMI <ArrowNE />
@@ -598,7 +602,7 @@ export default function Home() {
 
           <div className="mb-6 flex items-center justify-between font-mono text-[11px] tracking-[0.2em] text-muted">
             <span className="hero-meta">PORTFOLIO — 2026</span>
-            <span className="hero-meta hidden md:block">VIDEO / WEB / 3D</span>
+            <span className="hero-meta hidden md:block">VIDEO / 3D / WEB</span>
             <span className="hero-meta flex items-center gap-2.5">
               <LiveDot />
               DISPONIBILE
@@ -614,7 +618,7 @@ export default function Home() {
             <p className="hero-meta max-w-xl text-lg leading-relaxed text-muted md:col-span-7 md:text-xl">
               Racconto storie con il montaggio e le costruisco con il codice.
               Video editing e motion design per YouTube, piattaforme web sviluppate
-              con Next.js e GSAP, 3D in produzione.
+              con Next.js e GSAP, prodotti 3D dal modello alla stampa.
             </p>
             <div className="hero-meta font-mono text-[11px] leading-loose tracking-[0.16em] text-muted md:col-span-5 md:text-right">
               <p>EDITING — PREMIERE / AFTER EFFECTS</p>
@@ -768,41 +772,6 @@ export default function Home() {
             ))}
           </div>
 
-          {/* Music Videos Toggle */}
-          <div id="music-videos" className="mt-20 border-t border-line pt-12 reveal">
-            <button
-              onClick={() => setShowMusicVideos(!showMusicVideos)}
-              className="group flex w-full items-center justify-between font-mono text-[13px] tracking-[0.2em] font-bold text-ink hover:text-accent transition-colors"
-            >
-              <span className="flex items-center gap-4">
-                <span className="text-accent">(02)</span>
-                MUSIC VIDEO
-              </span>
-              <span className="text-2xl font-light leading-none">{showMusicVideos ? '−' : '+'}</span>
-            </button>
-            
-            <div className={`grid grid-cols-1 md:grid-cols-2 items-start gap-8 transition-all duration-700 ease-in-out ${showMusicVideos ? 'mt-12 opacity-100' : 'h-0 opacity-0 overflow-hidden mt-0'}`}>
-              {[
-                { src: '/music-videos/2flared.mp4', title: '@2FLARED', format: '16:9' },
-                { src: '/music-videos/pessima.mov', title: 'PESSIMA FREESTYLE', format: '16:9' },
-                { src: '/music-videos/siko.mp4', title: 'SIKO FREESTYLE', format: '9:16' },
-                { src: '/music-videos/big26k.mp4', title: 'X @BIG26K', format: '16:9' }
-              ].map((vid, i) => (
-                <div key={i} className={`flex flex-col gap-3 ${vid.format === '9:16' ? 'md:col-span-1 md:row-span-2' : ''}`}>
-                  <video 
-                    controls 
-                    className={`w-full object-cover bg-ink border border-line ${vid.format === '9:16' ? 'aspect-[9/16] max-h-[700px] w-auto mx-auto' : 'aspect-video'}`} 
-                    preload="metadata"
-                  >
-                    <source src={vid.src} />
-                    Il tuo browser non supporta il tag video.
-                  </video>
-                  <span className={`font-mono text-[10px] tracking-[0.15em] text-muted ${vid.format === '9:16' ? 'text-center' : ''}`}>{vid.title}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
         </div>
       </section>
 
@@ -837,6 +806,21 @@ export default function Home() {
           </div>
         </div>
       )}
+
+      {/* ─── 02 / 3D — LytoPrint ─── */}
+      <section id="3d" className="border-t border-line px-6 py-24 md:px-10 md:py-36">
+        <div className="mx-auto max-w-[1440px]">
+
+          <SectionHeader
+            index="02"
+            title="3D"
+            desc="Modellazione e stampa 3D additiva, dal file al prodotto finito. LytoPrint è il mio brand: lampade litofaniche che trasformano un'immagine in luce, progettate, stampate e vendute online."
+          />
+
+          <LytoShowcase />
+
+        </div>
+      </section>
 
       {/* ─── 03 / Web Development ─── */}
       <section id="web" className="border-t border-line px-6 py-24 md:px-10 md:py-36">
@@ -875,71 +859,6 @@ export default function Home() {
           <div className={`transition-all duration-700 ease-in-out ${activeWebCase ? 'opacity-100' : 'opacity-0 h-0 overflow-hidden'}`}>
             {activeWebCase === 'berry' && <CaseStudy data={berryCase} />}
             {activeWebCase === 'brace' && <CaseStudy data={braceCase} />}
-          </div>
-
-        </div>
-      </section>
-
-      {/* ─── 04 / 3D ─── */}
-      <section id="3d" className="border-t border-line px-6 py-24 md:px-10 md:py-36">
-        <div className="mx-auto max-w-[1440px]">
-
-          <SectionHeader
-            index="04"
-            title="3D"
-            desc="Modellazione organica, hard surface e configurazioni ottimizzate per la stampa 3D additiva. I primi lavori sono in produzione."
-          />
-
-          {/* Wrapper per l'effetto In Lavorazione */}
-          <div className="relative mt-8">
-            {/* Contenuto sfocato */}
-            <div className="blur-[6px] opacity-50 pointer-events-none select-none transition-all duration-500">
-              {/* 3D Categories */}
-              <div className="grid grid-cols-1 gap-12 md:grid-cols-3">
-                {[
-                  { src: '/3d-prints/lithophane-dog.jpeg', title: 'LYTOLAMP', desc: 'Lampade litofaniche personalizzate. Un mix di stampa 3D e luce che rivela foto e ricordi in modo unico.' },
-                  { src: '/3d-prints/batman.jpeg', title: 'FUNKO POP', desc: 'Riproduzioni in stile Funko Pop stampate in 3D con materiali speciali (es. filamento effetto legno).' },
-                  { src: '/3d-prints/nfc-card.jpeg', title: 'GADGET NFC', desc: 'Business card e smart tag NFC integrati in supporti stampati in 3D, come legno e bambù.' },
-                ].map((item, i) => (
-                  <div key={i} className="reveal flex flex-col">
-                    <div className="relative aspect-[4/5] w-full overflow-hidden border border-line bg-ink mb-6">
-                      <Image src={item.src} alt={item.title} fill className="object-cover" />
-                    </div>
-                    <h3 className="font-mono text-[12px] tracking-[0.2em] font-semibold text-ink mb-3">{item.title}</h3>
-                    <p className="text-sm leading-relaxed text-muted">{item.desc}</p>
-                  </div>
-                ))}
-              </div>
-
-              <div className="mt-20 text-center flex flex-col items-center">
-                <span className="btn-solid inline-flex items-center gap-2">
-                  VAI A 3D SPARK <ArrowNE />
-                </span>
-                <p className="mt-5 font-mono text-[10px] tracking-[0.2em] text-muted bg-panel border border-line px-4 py-2">
-                  NOTA: IL SITO È ATTUALMENTE IN LAVORAZIONE
-                </p>
-              </div>
-            </div>
-
-            {/* Overlay Lucchetto */}
-            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pointer-events-none">
-              <div className="bg-paper/90 backdrop-blur-md px-10 py-8 border border-line shadow-sm flex flex-col items-center gap-4 pointer-events-auto">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="miter" className="text-accent">
-                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                </svg>
-                <span className="font-mono text-[13px] tracking-[0.2em] font-bold text-ink text-center">
-                  SEZIONE IN<br/>LAVORAZIONE
-                </span>
-                
-                <div className="mt-2 flex flex-col items-center gap-2">
-                  <span className="font-mono text-[9px] tracking-[0.1em] text-muted uppercase">se vuoi dare un'occhiata:</span>
-                  <a href="https://3dspark-u7re-iota.vercel.app/" target="_blank" className="font-mono text-[11px] font-semibold tracking-[0.2em] text-accent hover:text-ink transition-colors flex items-center gap-1">
-                    VAI AL SITO <ArrowNE />
-                  </a>
-                </div>
-              </div>
-            </div>
           </div>
 
         </div>
@@ -1000,7 +919,6 @@ export default function Home() {
                 <label htmlFor="service" className="font-mono text-[10px] tracking-[0.2em] font-semibold text-ink">TIPOLOGIA DI SERVIZIO</label>
                 <select name="_subject" id="service" required className="w-full bg-transparent border-b border-ink/30 py-2 font-sans text-base outline-none focus:border-ink transition-colors text-ink cursor-pointer">
                   <option value="Nuova Richiesta: Video Editing">Video Editing</option>
-                  <option value="Nuova Richiesta: Video Musicale">Video Musicale</option>
                   <option value="Nuova Richiesta: Web Developing">Web Developing</option>
                   <option value="Nuova Richiesta: 3D">3D</option>
                   <option value="Nuova Richiesta: Altro">Altro</option>
