@@ -372,23 +372,23 @@ function CaseStudy({ data }: { data: CaseStudyData }) {
 
 const berryCase: CaseStudyData = {
   id: "berry",
-  kicker: "CASE 01 — SITO UFFICIALE ARTISTA",
+  kicker: "CASE 01 — CONCEPT SITO ARTISTA",
   title: "Berry La Voix",
-  desc: "Sito ufficiale di Berry La Voix, hip-hop vulgarisateur. Un'esperienza scrollytelling costruita attorno al vinile: 192 frame renderizzati sincronizzati allo scroll, drop calendar interattivo collegato alle uscite YouTube e store per il merchandising 4DAKULTURE integrato con Shopify. Progettato, sviluppato e pubblicato in produzione.",
+  desc: "Concept di sito per Berry La Voix, hip-hop vulgarisateur. Un'esperienza scrollytelling costruita attorno al vinile: 192 frame renderizzati sincronizzati allo scroll, drop calendar interattivo collegato alle uscite YouTube e store per il merchandising 4DAKULTURE integrato con Shopify. Progettato e sviluppato come proposta: non è il sito ufficiale dell'artista.",
   meta: [
     { label: "RUOLO", value: "Design + Sviluppo" },
     { label: "STACK", value: "Next.js · GSAP · Shopify" },
-    { label: "STATO", value: "Online" },
+    { label: "STATO", value: "Concept" },
   ],
   link: { 
     href: "https://berry-site.vercel.app/", 
-    label: "Visita il sito live",
-    note: "Il sito è temporaneamente ospitato in ambiente di staging (Vercel) in attesa della finalizzazione delle trattative per l'hosting ufficiale."
+    label: "Visita il sito",
+    note: "Demo ospitata in ambiente di staging (Vercel). Concept a scopo illustrativo, non affiliato all'artista."
   },
   hero: {
     src: "/berry-live-hero.webp",
     alt: "Hero del sito di Berry La Voix: giradischi in teca di vetro con sequenza scroll",
-    captionL: "BERRY-SITE.VERCEL.APP — HOMEPAGE",
+    captionL: "BERRY-SITE.VERCEL.APP — CONCEPT",
     captionR: "NEXT.JS · GSAP · E-COMMERCE",
     priority: true,
   },
